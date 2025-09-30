@@ -22,11 +22,14 @@ class FocusMeDataBase {
     ); // join('path' ,'to','foo') => 'path/to/foo'
     Database focusme = await openDatabase(
       path,
-      version: 1,
+      version: 1, //when version change ,calling onupgrade
       onCreate: _onCreateDb,
+      onUpgrade: _onUpgrade();
     );
     return focusme;
   }
+
+  _onUpgrade(Database db, int oldversion, newVersion) {}
 
   _onCreateDb(Database db, int version) async {
     await db.execute('''
@@ -74,6 +77,27 @@ class FocusMeDataBase {
       FOREIGN KEY (user_id) REFERENCES users(user_id)
     )
   ''');
-    print('create database');
+    print('create database ===============================');
+  }
+
+  readDataFromDatabase(String sql) async {
+    Database? mydb = await db; //check if we initial db
+    List<Map> response = await mydb!.rawQuery(sql);
+    return response;
+  }
+  insertDataToDatabase(String sql) async {
+    Database? mydb = await db; //check if we initial db
+    int response = await mydb!.rawInsert(sql);
+    return response;
+  }
+  UpdateDataInDatabase(String sql) async {
+    Database? mydb = await db; //check if we initial db
+   int response = await mydb!.rawUpdate(sql);
+    return response;
+  }
+  DeleteDataFromDatabase(String sql) async {
+    Database? mydb = await db; //check if we initial db
+    int response = await mydb!.rawDelete(sql);
+    return response;
   }
 }

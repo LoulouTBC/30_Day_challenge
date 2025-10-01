@@ -24,12 +24,14 @@ class FocusMeDataBase {
       path,
       version: 1, //when version change ,calling onupgrade
       onCreate: _onCreateDb,
-      onUpgrade: _onUpgrade();
+      onUpgrade: _onUpgrade,
     );
     return focusme;
   }
 
-  _onUpgrade(Database db, int oldversion, newVersion) {}
+  _onUpgrade(Database db, int oldversion, newVersion) {
+    print("onCreate =====================================");
+  }
 
   _onCreateDb(Database db, int version) async {
     await db.execute('''
@@ -85,16 +87,19 @@ class FocusMeDataBase {
     List<Map> response = await mydb!.rawQuery(sql);
     return response;
   }
+
   insertDataToDatabase(String sql) async {
     Database? mydb = await db; //check if we initial db
     int response = await mydb!.rawInsert(sql);
     return response;
   }
+
   UpdateDataInDatabase(String sql) async {
     Database? mydb = await db; //check if we initial db
-   int response = await mydb!.rawUpdate(sql);
+    int response = await mydb!.rawUpdate(sql);
     return response;
   }
+
   DeleteDataFromDatabase(String sql) async {
     Database? mydb = await db; //check if we initial db
     int response = await mydb!.rawDelete(sql);

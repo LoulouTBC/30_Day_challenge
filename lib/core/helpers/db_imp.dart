@@ -128,7 +128,7 @@ class FocusMeDataBase {
 
   static Future<Database> _initialFocusDb() async {
     try {
-      print('before openDB =============================================================');
+      // print('before openDB =============================================================');
       final databasePath = await getDatabasesPath();
       final path = join(databasePath, 'focusMe.db');
 
@@ -139,21 +139,20 @@ class FocusMeDataBase {
         onUpgrade: _onUpgrade,
       );
 
-      print('db opened: $path');
+      // print('db opened: $path');
       return database;
-    } catch (e, st) {
-      print('Error opening database: $e\n$st');
+    } catch (e) {
+      // print('Error opening database: $e\n$st');
       rethrow;
     }
   }
 
   static FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    print('onUpgrade: $oldVersion -> $newVersion');
-    // خطوات الترحيل (migrations) إذا غيرت النسخة لاحقًا
+    // print('onUpgrade: $oldVersion -> $newVersion');
   }
 
   static FutureOr<void> _onCreateDb(Database db, int version) async {
-    print('onCreate called, version $version');
+    // print('onCreate called, version $version');
     await db.execute('''
       CREATE TABLE users (
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -199,18 +198,18 @@ class FocusMeDataBase {
         FOREIGN KEY (user_id) REFERENCES users(user_id)
       );
     ''');
-    print('create database ===============================');
+    // print('create database ===============================');
   }
 
    readDataFromDatabase(String sql) async {
     Database? mydb = await db; //check if we initial db
-    List<Map> response = await mydb!.rawQuery(sql);
+    List<Map> response = await mydb.rawQuery(sql);
     return response;
   }
 
   insertDataToDatabase(String sql) async {
     Database? mydb = await db; //check if we initial db
-    int response = await mydb!.rawInsert(sql);
+    int response = await mydb.rawInsert(sql);
     return response;
   }
 

@@ -1,28 +1,65 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  final List<Map<String, String>> challenges = [
+    {"title": "Workout Challenge"},
+    {"title": "Reading Challenge"},
+    {"title": "Meditation Challenge"},
+    {"title": "Sleep Early Challenge"},
+    {"title": "Daily Writing Challenge"},
+    {"title": "Walking Challenge"},
+  ];
 
-  final items = [];
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisExtent: 10,
-          mainAxisSpacing: 10,
+      appBar: AppBar(title: const Text("Your Challenges"), centerTitle: true),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: GridView.builder(
+          itemCount: challenges.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Number of columns
+            crossAxisSpacing: 12, // Horizontal space between items
+            mainAxisSpacing: 12, // Vertical space between items
+            childAspectRatio: 1, // Width/height ratio
+          ),
+          itemBuilder: (context, index) {
+            final challenge = challenges[index];
+            return GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Selected: ${challenge["title"]}')),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent.shade100,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+
+                child:Text(
+                  '$challenge["title"]',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          },
         ),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return Container(
-            color: Colors.blue,
-            height: 50,
-            width: 50,
-            child: Center(child: Text('hi')),
-          );
-        },
       ),
     );
   }

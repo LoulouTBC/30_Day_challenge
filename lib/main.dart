@@ -1,7 +1,8 @@
-import 'package:challenges_app/core/helpers/db_imp.dart';
+// import 'package:challenges_app/core/helpers/db_imp.dart';
 import 'package:challenges_app/features/home/UI/home.dart';
-import 'package:challenges_app/features/progress_calendar/ui/progress_calendar_screen.dart';
+// import 'package:challenges_app/features/progress_calendar/ui/progress_calendar_screen.dart';
 import 'package:flutter/material.dart';
+// import 'package:path/path.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Calendar App",
       theme: ThemeData.light(),
+      routes: {'/home': (_) => HomePage()},
       home: HomePage(),
     );
   }
 }
-

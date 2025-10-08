@@ -1,4 +1,5 @@
 // import 'package:challenges_app/core/helpers/db_imp.dart';
+import 'package:challenges_app/core/helpers/db_imp.dart';
 import 'package:challenges_app/features/home/UI/home.dart';
 // import 'package:challenges_app/features/progress_calendar/ui/progress_calendar_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,13 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   @override
   Widget build(BuildContext context) {

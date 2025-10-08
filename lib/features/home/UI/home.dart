@@ -1,6 +1,8 @@
+import 'package:challenges_app/features/home/data/challenges_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+  final ChallengesRepository _challengesRepository = ChallengesRepository();
   final List<Map<String, String>> challenges = [
     {"title": "Workout Challenge"},
     {"title": "Reading Challenge"},
@@ -29,14 +31,12 @@ class HomePage extends StatelessWidget {
           itemBuilder: (context, index) {
             final challenge = challenges[index];
             return GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Selected: ${challenge["title"]}')),
-                );
+              onTap: () async {
+                
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent.shade100,
+                  color: const Color.fromARGB(255, 19, 150, 113),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -47,8 +47,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
 
-                child:Text(
-                  '$challenge["title"]',
+                child: Text(
+                  challenge["title"]!,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

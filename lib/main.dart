@@ -1,9 +1,8 @@
-// import 'package:challenges_app/core/helpers/db_imp.dart';
-import 'package:challenges_app/core/helpers/db_imp.dart';
-import 'package:challenges_app/features/home/UI/home.dart';
-// import 'package:challenges_app/features/progress_calendar/ui/progress_calendar_screen.dart';
+import 'package:challenges_app/core/helpers/inserting_schema.dart';
+import 'package:challenges_app/features/home/UI/challenges_screen.dart';
+import 'package:challenges_app/features/home/logic/challenges_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +12,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,10 @@ class MyApp extends StatelessWidget {
       title: "Calendar App",
       theme: ThemeData.light(),
       routes: {'/home': (_) => HomePage()},
-      home: HomePage(),
+      home: ChangeNotifierProvider(
+        create: (context) => ChallengesProvider()..fetchAllChallenges(),
+        child: HomePage(),
+      ),
     );
   }
 }

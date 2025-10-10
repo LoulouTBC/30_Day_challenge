@@ -1,61 +1,10 @@
-// import 'package:challenges_app/core/helpers/db_imp.dart';
-
-// class ChallengesRepository {
-//   final FocusMeDataBase _db = FocusMeDataBase();
-
-//   /// get all challenges
-//   Future<List<Map<String, dynamic>>> getAllChallenges() async {
-//     final db = await FocusMeDataBase.db;
-//     return await db.query('challenges');
-//   }
-
-//   /// insert a new challenge
-//   Future<int> addChallenge({
-//     required int userId,
-//     required String title,
-//     required String description,
-//   }) async {
-//     final db = await FocusMeDataBase.db;
-//     return await db.insert('challenges', {
-//       'user_id': userId,
-//       'title': title,
-//       'description': description,
-//       'start_date': DateTime.now().toIso8601String(),
-//     });
-//   }
-
-//   /// update challenge
-//   Future<int> updateChallenge({
-//     required int id,
-//     required String newTitle,
-//   }) async {
-//     final db = await FocusMeDataBase.db;
-//     return await db.update(
-//       'challenges',
-//       {'title': newTitle},
-//       where: 'challenge_id = ?',
-//       whereArgs: [id],
-//     );
-//   }
-
-//   /// delete challenge
-//   Future<int> deleteChallenge(int id) async {
-//     final db = await FocusMeDataBase.db;
-//     return await db.delete(
-//       'challenges',
-//       where: 'challenge_id = ?',
-//       whereArgs: [id],
-//     );
-//   }
-// }
 import 'package:challenges_app/core/helpers/db_imp.dart';
 import 'package:challenges_app/features/home/data/challenge_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ChallengesRepository {
-  final FocusMeDataBase _db = FocusMeDataBase();
 
-  /// 🔹 إرجاع كل التحديات
+  /// return all challenges
   Future<List<Challenge>> getAllChallenges() async {
     final db = await FocusMeDataBase.db;
     final List<Map<String, dynamic>> maps = await db.query('challenges');
@@ -63,7 +12,7 @@ class ChallengesRepository {
     return maps.map((map) => Challenge.fromMap(map)).toList();
   }
 
-  /// 🔹 إضافة تحدٍ جديد
+  /// add new challenge
   Future<int> insertChallenge(Challenge challenge) async {
     final db = await FocusMeDataBase.db;
     return await db.insert(
@@ -73,7 +22,7 @@ class ChallengesRepository {
     );
   }
 
-  /// 🔹 تحديث تحدٍ
+  /// update challenge
   Future<int> updateChallenge(Challenge challenge) async {
     final db = await FocusMeDataBase.db;
     return await db.update(
@@ -84,7 +33,7 @@ class ChallengesRepository {
     );
   }
 
-  /// 🔹 حذف تحدٍ
+  /// delete challenge
   Future<int> deleteChallenge(int id) async {
     final db = await FocusMeDataBase.db;
     return await db.delete(
@@ -94,7 +43,7 @@ class ChallengesRepository {
     );
   }
 
-  /// 🔹 جلب تحدٍ محدد عبر الـ id
+  /// get a specific challenge by id
   Future<Challenge?> getChallengeById(int id) async {
     final db = await FocusMeDataBase.db;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -106,6 +55,6 @@ class ChallengesRepository {
     if (maps.isNotEmpty) {
       return Challenge.fromMap(maps.first);
     }
-    return null;
+     throw Exception('Challenge with ID $id not found in the database.');
   }
 }

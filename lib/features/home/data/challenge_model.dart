@@ -27,7 +27,7 @@ class Challenge {
     };
   }
 
-  // لتحويل Map (من قاعدة البيانات) إلى كائن Challenge
+  // from map(from database) to object
   factory Challenge.fromMap(Map<String, dynamic> map) {
     return Challenge(
       challengeId: map['challenge_id'],

@@ -1,5 +1,5 @@
 import 'package:challenges_app/core/helpers/db_imp.dart';
-import 'package:challenges_app/features/home/data/challenge_model.dart';
+import 'package:challenges_app/features/challenges/data/challenge_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ChallengesRepository {

@@ -1,5 +1,5 @@
-import 'package:challenges_app/features/home/data/challenge_model.dart';
-import 'package:challenges_app/features/home/data/challenges_repository.dart';
+import 'package:challenges_app/features/challenges/data/challenge_model.dart';
+import 'package:challenges_app/features/challenges/data/challenges_repository.dart';
 import 'package:flutter/material.dart';
 
 class ChallengesProvider extends ChangeNotifier {

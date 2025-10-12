@@ -1,5 +1,5 @@
-import 'package:challenges_app/features/home/data/challenges_repository.dart';
-import 'package:challenges_app/features/home/logic/challenges_provider.dart';
+import 'package:challenges_app/features/challenges/data/challenges_repository.dart';
+import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -53,14 +53,27 @@ class HomePage extends StatelessWidget {
                             ],
                           ),
 
-                          child: Text(
-                            challenge.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
+                          child: Column(
+                            children: [
+                              Text(
+                                challenge.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                challenge.description,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
                       );

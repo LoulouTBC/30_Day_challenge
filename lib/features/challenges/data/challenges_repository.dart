@@ -3,7 +3,6 @@ import 'package:challenges_app/features/challenges/data/challenge_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ChallengesRepository {
-
   /// return all challenges
   Future<List<Challenge>> getAllChallenges() async {
     final db = await FocusMeDataBase.db;
@@ -55,6 +54,6 @@ class ChallengesRepository {
     if (maps.isNotEmpty) {
       return Challenge.fromMap(maps.first);
     }
-     throw Exception('Challenge with ID $id not found in the database.');
+    throw Exception('Challenge with ID $id not found in the database.');
   }
 }

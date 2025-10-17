@@ -7,9 +7,18 @@ class ChallengesProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   List<Challenge> _challenges = [];
+  Challenge? _selectedChallenge;
+  int? ChallengeId;
 
   List<Challenge> get challenges => _challenges;
   bool get isLoading => _isLoading;
+  Challenge? get selectedChallenge => _selectedChallenge;
+
+  void setSelectedChallenge(int challengeId) {
+    // _selectedChallenge = challenge;
+   challengeId = challengeId;
+    notifyListeners();
+  }
 
   // Fetch all challenges
   Future<void> fetchAllChallenges() async {

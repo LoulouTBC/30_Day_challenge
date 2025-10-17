@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class ChallengeDetails extends StatelessWidget {
-  const ChallengeDetails({super.key});
+class ChallengeDetailsScreen extends StatelessWidget {
+  const ChallengeDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

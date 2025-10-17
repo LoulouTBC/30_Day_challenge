@@ -15,7 +15,6 @@ class Challenge {
     this.endDate,
   });
 
-  // لتحويل الكائن إلى خريطة لتخزينه في SQLite
   Map<String, dynamic> toMap() {
     return {
       'challenge_id': challengeId,
@@ -27,7 +26,6 @@ class Challenge {
     };
   }
 
-  // from map(from database) to object
   factory Challenge.fromMap(Map<String, dynamic> map) {
     return Challenge(
       challengeId: map['challenge_id'],

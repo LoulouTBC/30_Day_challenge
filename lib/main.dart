@@ -1,6 +1,6 @@
 import 'package:challenges_app/core/helpers/inserting_schema.dart';
 import 'package:challenges_app/features/challenges/UI/add_new_challenge_screen.dart';
-import 'package:challenges_app/features/challenges/UI/challenge_details_screen.dart';
+import 'package:challenges_app/features/progress_calendar/ui/challenge_details_screen.dart';
 import 'package:challenges_app/features/challenges/UI/challenges_screen.dart';
 import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +21,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Calendar App",
       theme: ThemeData.light(),
-      routes: {'/home': (_) => HomePage()},
+      routes: {
+        '/home': (_) => HomePage(),
+        '/challengeDetailsScreen': (_) => ChallengeDetailsScreen(),
+        '/addNewChallenge': (_) => AddNewChallenge(),
+      },
       home: ChangeNotifierProvider(
         create: (context) => ChallengesProvider()..fetchAllChallenges(),
-        child: AddNewChallenge(),
+        child: HomePage(),
       ),
     );
   }

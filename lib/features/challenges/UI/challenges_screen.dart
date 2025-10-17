@@ -1,10 +1,11 @@
+import 'package:challenges_app/features/progress_calendar/ui/challenge_details_screen.dart';
 import 'package:challenges_app/features/challenges/data/challenges_repository.dart';
 import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  final ChallengesRepository _challengesRepository = ChallengesRepository();
+  // final ChallengesRepository _challengesRepository = ChallengesRepository();
   // final List<Map<String, String>> challenges = [
   //   {"title": "Workout Challenge"},
   //   {"title": "Reading Challenge"},
@@ -39,7 +40,15 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final challenge = model.challenges[index];
                       return GestureDetector(
-                        onTap: () async {},
+                        onTap: () async {
+                          Provider.of<ChallengesProvider>(
+                            context,
+                          ).setSelectedChallenge(challenge.challengeId!);
+                          Navigator.pushNamed(
+                            context,
+                            '/challengeDetailsScreen',
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 19, 150, 113),

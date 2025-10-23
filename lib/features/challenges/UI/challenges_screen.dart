@@ -1,5 +1,3 @@
-import 'package:challenges_app/features/progress_calendar/ui/challenge_details_screen.dart';
-import 'package:challenges_app/features/challenges/data/challenges_repository.dart';
 import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

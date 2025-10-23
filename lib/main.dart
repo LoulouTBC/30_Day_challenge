@@ -1,5 +1,5 @@
-import 'package:challenges_app/core/helpers/inserting_schema.dart';
 import 'package:challenges_app/features/challenges/UI/add_new_challenge_screen.dart';
+import 'package:challenges_app/features/progress_calendar/logic/progress_provider.dart';
 import 'package:challenges_app/features/progress_calendar/ui/challenge_details_screen.dart';
 import 'package:challenges_app/features/challenges/UI/challenges_screen.dart';
 import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
@@ -26,8 +26,13 @@ class MyApp extends StatelessWidget {
         '/challengeDetailsScreen': (_) => ChallengeDetailsScreen(),
         '/addNewChallenge': (_) => AddNewChallenge(),
       },
-      home: ChangeNotifierProvider(
-        create: (context) => ChallengesProvider()..fetchAllChallenges(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => ChallengesProvider()..fetchAllChallenges(),
+          ),
+          ChangeNotifierProvider(create: (context) => ProgressProvider()),
+        ],
         child: HomePage(),
       ),
     );

@@ -16,7 +16,7 @@ class ChallengeDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       body: TableCalendar(
-        calendarFormat: _calendarFormat ,
+        calendarFormat: _calendarFormat,
         focusedDay: _focusedDay,
         firstDay: _rangeStart,
         lastDay: _rangeEnd,

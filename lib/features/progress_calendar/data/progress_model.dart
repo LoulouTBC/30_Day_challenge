@@ -1,6 +1,6 @@
 class ProgressModel {
   final int progress_id;
-  final int challenge_id;
+  final int? challenge_id;
   final int day_number;
   final bool status;
   final DateTime? created_at;
@@ -18,7 +18,7 @@ class ProgressModel {
       'progress_id': progress_id,
       'challenge_id': challenge_id,
       'day_number': day_number,
-      'status': status,
+      'status': status ? 1 : 0,
       'created_at': created_at?.toIso8601String(),
     };
   }
@@ -28,9 +28,9 @@ class ProgressModel {
       progress_id: map['progress_id'],
       challenge_id: map['challenge_id'],
       day_number: map['day_number'],
-      status: map['status'],
+      status: map['status']==1,
       created_at: map['created_at'] != null
-          ? DateTime.parse(map['start_date'])
+          ? DateTime.parse(map['created_at'])
           : null,
     );
   }

@@ -1,27 +1,131 @@
+import 'package:challenges_app/features/progress_calendar/logic/progress_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class ChallengeDetailsScreen extends StatelessWidget {
+class ChallengeDetailsScreen extends StatefulWidget {
   const ChallengeDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    CalendarFormat _calendarFormat = CalendarFormat.month;
-    DateTime _focusedDay = DateTime.now();
-    DateTime? _selectedDay;
-    DateTime? _rangeStart = DateTime.utc(2025, 9, 2);
-    DateTime? _rangeEnd = DateTime.utc(2025, 9, 10);
+  State<ChallengeDetailsScreen> createState() => _ChallengeDetailsScreenState();
+}
 
-    var selectedDayes = [];
+class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
+  late int challengeId;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Get the challengeId from the route arguments
+    challengeId = ModalRoute.of(context)!.settings.arguments as int;
+
+    // Load progress data from the database for this challenge
+    final progressProvider = context.read<ProgressProvider>();
+    progressProvider.loadProgressForChallenge(challengeId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progressProvider = context.watch<ProgressProvider>();
+    final completedDays = progressProvider.getProgressList(challengeId);
 
     return Scaffold(
-      body: TableCalendar(
-        calendarFormat: _calendarFormat,
-        focusedDay: _focusedDay,
-        firstDay: _rangeStart,
-        lastDay: _rangeEnd,
-        currentDay: _focusedDay,
+      appBar: AppBar(
+        title: const Text("Challenge Progress"),
+        centerTitle: true,
       ),
+      body: progressProvider.isLoading(challengeId)
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                const SizedBox(height: 16),
+
+                // Calendar widget
+                Expanded(
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2024, 1, 1),
+                    lastDay: DateTime.utc(2030, 12, 31),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) =>
+                        isSameDay(_selectedDay, day),
+                    onDaySelected: (selectedDay, focusedDay) async {
+                      // When a day is tapped, toggle its progress state
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                      await progressProvider.toggleDay(challengeId, selectedDay);
+                    },
+
+                    // Customize how days are displayed
+                    calendarBuilders: CalendarBuilders(
+                      defaultBuilder: (context, day, focusedDay) {
+                        final isCompleted = completedDays.any(
+                          (d) => isSameDay(d, day),
+                        );
+
+                        // Highlight completed days with a green circle
+                        if (isCompleted) {
+                          return Container(
+                            margin: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${day.day}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return null; // Use default appearance
+                      },
+                    ),
+
+                    // Highlight today's date
+                    calendarStyle: const CalendarStyle(
+                      todayDecoration: BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Progress section
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Progress: ${(progressProvider.getProgressPercent(challengeId) * 100).toStringAsFixed(1)}%",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      LinearProgressIndicator(
+                        value: progressProvider.getProgressPercent(challengeId),
+                        backgroundColor: Colors.grey[300],
+                        color: Colors.green,
+                        minHeight: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }

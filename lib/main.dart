@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => ChallengesProvider()..fetchAllChallenges(),
           ),
-          ChangeNotifierProvider(create: (context) => ProgressProvider()),
+          ChangeNotifierProvider(create: (context) => ProgressProvider()
+          ),
         ],
         child: HomePage(),
       ),

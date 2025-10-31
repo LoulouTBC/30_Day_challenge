@@ -39,12 +39,10 @@ class HomePage extends StatelessWidget {
                       final challenge = model.challenges[index];
                       return GestureDetector(
                         onTap: () async {
-                          Provider.of<ChallengesProvider>(
-                            context,
-                          ).setSelectedChallenge(challenge.challengeId!);
                           Navigator.pushNamed(
                             context,
                             '/challengeDetailsScreen',
+                            arguments: challenge.challengeId,
                           );
                         },
                         child: Container(

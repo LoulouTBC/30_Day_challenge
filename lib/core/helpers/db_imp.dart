@@ -73,7 +73,7 @@ class FocusMeDataBase {
         progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
         challenge_id INTEGER NOT NULL,
         day_number INTEGER NOT NULL,
-        status TEXT CHECK(status IN ('done','not_done')) DEFAULT 'not_done',
+        status INTEGER NOT NULL DEFAULT 0, -- 0 false, 1 true
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id)
       );

@@ -15,14 +15,14 @@ class ProgressProvider extends ChangeNotifier {
 
   /// Load progress for a specific challenge
   Future<void> loadProgressForChallenge(int challengeId) async {
+    // If data already loaded, skip fetching again (avoid unnecessary notify)
+    if (_progressCache.containsKey(challengeId)) return;
+
     // Avoid multiple calls for the same challenge (race condition guard)
     if (_isLoading[challengeId] == true) return;
 
-    // If data already loaded, skip fetching again
-    if (_progressCache.containsKey(challengeId)) return;
-
     _isLoading[challengeId] = true;
-    notifyListeners();
+    notifyListeners(); // safe if we call this after build (we will)
 
     try {
       final progresses = await _repo.getCompletedDaysByChallengeId(challengeId);
@@ -33,14 +33,11 @@ class ProgressProvider extends ChangeNotifier {
       _progressCache[challengeId] = dates;
     } finally {
       _isLoading[challengeId] = false;
-      notifyListeners(); // Update UI when loading finishes
+      notifyListeners(); // update UI when loading finishes
     }
   }
 
-  // Normalize date (ignore hours/min/sec)
   DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
-
-  // --------- Getters ---------
 
   List<DateTime> getProgressList(int challengeId) {
     final set = _progressCache[challengeId];
@@ -60,7 +57,6 @@ class ProgressProvider extends ChangeNotifier {
     return (completed / totalDays).clamp(0.0, 1.0);
   }
 
-  // --------- Toggle day (optimistic update) ---------
   Future<void> toggleDay(int challengeId, DateTime day) async {
     final d = _dateOnly(day);
     final set = _progressCache.putIfAbsent(challengeId, () => <DateTime>{});
@@ -69,7 +65,6 @@ class ProgressProvider extends ChangeNotifier {
     if (currentlyDone) {
       set.removeWhere((s) => isSameDay(s, d));
       notifyListeners();
-
       try {
         await _repo.removeProgressDay(challengeId, d);
       } catch (e) {
@@ -79,7 +74,6 @@ class ProgressProvider extends ChangeNotifier {
     } else {
       set.add(d);
       notifyListeners();
-
       try {
         await _repo.addProgressDay(
           ProgressModel(

@@ -9,8 +9,19 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ChallengesProvider()..fetchAllChallenges(),
+        ),
+        ChangeNotifierProvider(create: (context) => ProgressProvider()),
+      ],
+      child: const MyApp(), 
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,16 +37,7 @@ class MyApp extends StatelessWidget {
         '/challengeDetailsScreen': (_) => ChallengeDetailsScreen(),
         '/addNewChallenge': (_) => AddNewChallenge(),
       },
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => ChallengesProvider()..fetchAllChallenges(),
-          ),
-          ChangeNotifierProvider(create: (context) => ProgressProvider()
-          ),
-        ],
-        child: HomePage(),
-      ),
+      home: HomePage(),
     );
   }
 }

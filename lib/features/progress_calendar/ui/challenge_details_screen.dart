@@ -14,17 +14,23 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   late int challengeId;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  bool _isInit = false; // guard to load once
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    if (_isInit) return;
+    _isInit = true;
+
     // Get the challengeId from the route arguments
     challengeId = ModalRoute.of(context)!.settings.arguments as int;
 
-    // Load progress data from the database for this challenge
-    final progressProvider = context.read<ProgressProvider>();
-    progressProvider.loadProgressForChallenge(challengeId);
+    // Schedule load after current frame finishes building so notifyListeners() is safe
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final progressProvider = context.read<ProgressProvider>();
+      progressProvider.loadProgressForChallenge(challengeId);
+    });
   }
 
   @override
@@ -49,10 +55,8 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                     firstDay: DateTime.utc(2024, 1, 1),
                     lastDay: DateTime.utc(2030, 12, 31),
                     focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) =>
-                        isSameDay(_selectedDay, day),
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                     onDaySelected: (selectedDay, focusedDay) async {
-                      // When a day is tapped, toggle its progress state
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
@@ -63,11 +67,8 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                     // Customize how days are displayed
                     calendarBuilders: CalendarBuilders(
                       defaultBuilder: (context, day, focusedDay) {
-                        final isCompleted = completedDays.any(
-                          (d) => isSameDay(d, day),
-                        );
+                        final isCompleted = completedDays.any((d) => isSameDay(d, day));
 
-                        // Highlight completed days with a green circle
                         if (isCompleted) {
                           return Container(
                             margin: const EdgeInsets.all(6),
@@ -86,11 +87,10 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                             ),
                           );
                         }
-                        return null; // Use default appearance
+                        return null;
                       },
                     ),
 
-                    // Highlight today's date
                     calendarStyle: const CalendarStyle(
                       todayDecoration: BoxDecoration(
                         color: Colors.orange,

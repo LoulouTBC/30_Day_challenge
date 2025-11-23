@@ -4,29 +4,45 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ChallengeDetailsScreen extends StatefulWidget {
-  const ChallengeDetailsScreen({super.key});
+  final int challengeId;
+
+  const ChallengeDetailsScreen({super.key, required this.challengeId});
 
   @override
   State<ChallengeDetailsScreen> createState() => _ChallengeDetailsScreenState();
 }
 
 class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
-  late int challengeId;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  bool _isInit = false; // guard to load once
+  bool _isInit = false;
+
+  late int challengeId;
+
+  String formatDate(DateTime date) =>
+      "${date.year.toString().padLeft(4, '0')}-"
+      "${date.month.toString().padLeft(2, '0')}-"
+      "${date.day.toString().padLeft(2, '0')}";
+
+  @override
+  void initState() {
+    super.initState();
+    challengeId = widget.challengeId;
+    
+    Future.microtask(() {
+      Provider.of<ProgressProvider>(
+        context,
+        listen: false,
+      ).loadProgressForChallenge(challengeId);
+    });
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     if (_isInit) return;
     _isInit = true;
 
-    // Get the challengeId from the route arguments
-    challengeId = ModalRoute.of(context)!.settings.arguments as int;
-
-    // Schedule load after current frame finishes building so notifyListeners() is safe
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final progressProvider = context.read<ProgressProvider>();
       progressProvider.loadProgressForChallenge(challengeId);
@@ -36,7 +52,9 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final progressProvider = context.watch<ProgressProvider>();
-    final completedDays = progressProvider.getProgressList(challengeId);
+    final completedDays = progressProvider.getProgressList(
+      challengeId,
+    ); // List<String> yyyy-MM-dd
 
     return Scaffold(
       appBar: AppBar(
@@ -48,26 +66,30 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
           : Column(
               children: [
                 const SizedBox(height: 16),
-
-                // Calendar widget
                 Expanded(
                   child: TableCalendar(
                     firstDay: DateTime.utc(2024, 1, 1),
                     lastDay: DateTime.utc(2030, 12, 31),
                     focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    selectedDayPredicate: (day) =>
+                        _selectedDay != null && day == _selectedDay,
                     onDaySelected: (selectedDay, focusedDay) async {
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       });
-                      await progressProvider.toggleDay(challengeId, selectedDay);
-                    },
 
-                    // Customize how days are displayed
+                      //update date in yyyy-mm-dd
+                      await progressProvider.toggleDay(
+                        challengeId,
+                        formatDate(selectedDay),
+                      );
+                    },
                     calendarBuilders: CalendarBuilders(
                       defaultBuilder: (context, day, focusedDay) {
-                        final isCompleted = completedDays.any((d) => isSameDay(d, day));
+                        final isCompleted = completedDays.contains(
+                          formatDate(day),
+                        );
 
                         if (isCompleted) {
                           return Container(
@@ -90,7 +112,6 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                         return null;
                       },
                     ),
-
                     calendarStyle: const CalendarStyle(
                       todayDecoration: BoxDecoration(
                         color: Colors.orange,
@@ -99,10 +120,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // Progress section
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

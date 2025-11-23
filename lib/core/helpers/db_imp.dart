@@ -74,7 +74,7 @@ class FocusMeDataBase {
         challenge_id INTEGER NOT NULL,
         day_number INTEGER NOT NULL,
         status INTEGER NOT NULL DEFAULT 0, -- 0 false, 1 true
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_at DATE ,
         FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id)
       );
     ''');

@@ -1,16 +1,16 @@
 class ProgressModel {
   final int progress_id;
-  final int? challenge_id;
+  final int challenge_id;
   final int day_number;
-  final bool status;
-  final DateTime? created_at;
+  final int status; // 0 or 1
+  final String created_at; // 'yyyy-MM-dd'
 
   ProgressModel({
     required this.progress_id,
     required this.challenge_id,
     required this.day_number,
     required this.status,
-    this.created_at,
+    required this.created_at,
   });
 
   Map<String, dynamic> toMap() {
@@ -18,8 +18,8 @@ class ProgressModel {
       'progress_id': progress_id,
       'challenge_id': challenge_id,
       'day_number': day_number,
-      'status': status ? 1 : 0,
-      'created_at': created_at?.toIso8601String(),
+      'status': status,
+      'created_at': created_at, // التاريخ اللي بتمرره انت
     };
   }
 
@@ -28,15 +28,8 @@ class ProgressModel {
       progress_id: map['progress_id'],
       challenge_id: map['challenge_id'],
       day_number: map['day_number'],
-      status: map['status']==1,
-      created_at: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : null,
+      status: map['status'],
+      created_at: map['created_at'],
     );
-  }
-
-  @override
-  String toString() {
-    return 'Challenge(progress_id: $progress_id, challenge_id: $challenge_id, day_number: $day_number, created_at: $created_at)';
   }
 }

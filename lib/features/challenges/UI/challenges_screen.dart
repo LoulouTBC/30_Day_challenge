@@ -1,4 +1,5 @@
 import 'package:challenges_app/features/challenges/logic/challenges_provider.dart';
+import 'package:challenges_app/features/progress_calendar/ui/challenge_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,10 +40,14 @@ class HomePage extends StatelessWidget {
                       final challenge = model.challenges[index];
                       return GestureDetector(
                         onTap: () async {
-                          Navigator.pushNamed(
+                          Navigator.push(
                             context,
-                            '/challengeDetailsScreen',
-                            arguments: challenge.challengeId,
+
+                            MaterialPageRoute(
+                              builder: (_) => ChallengeDetailsScreen(
+                                challengeId: challenge.challengeId!,
+                              ),
+                            ),
                           );
                         },
                         child: Container(

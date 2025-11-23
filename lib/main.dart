@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       routes: {
         '/home': (_) => HomePage(),
-        '/challengeDetailsScreen': (_) => ChallengeDetailsScreen(),
+        // '/challengeDetailsScreen': (_) => ChallengeDetailsScreen(),
         '/addNewChallenge': (_) => AddNewChallenge(),
       },
       home: HomePage(),
